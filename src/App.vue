@@ -10,23 +10,21 @@
         </div>
       </header>
       <div class="wrapper">
-        <div id="app">
           <div id='flexbox'>
 
             <div id="stage">
               <transition name="fade"><component v-bind:is='activeWidget' ></component></transition>
             </div>
             <div id="widgets">
-              <button v-on:click='slideUp'>click me</button>
-              <button v-on:click='slideDown'>click me</button>
+              <button v-on:click='slideUp'><div class="up"><</div></button>
+              <button v-on:click='slideDown'><div class="down"><</div></button>
               <widget :widgets='widgets'></widget>
             </div>
           </div>
-        </div>
       </div>
       <footer class="footerWrapper">
         <div class="footerApp">
-          &copy; 2018 Terry Broughton
+          &copy;  2018 Terry Broughton   ::   t:  07986 559924   ::   e:  terry@terrybro.co.uk
         </div>
         <div class='speaker'>
 
@@ -37,6 +35,7 @@
 </template>
 
 <script>
+import Chart from 'chart.js'
 import mp3 from './assets/sounds/forest.mp3'
 import Widget from './components/Widget'
 import Home from './components/Home'
@@ -44,9 +43,15 @@ import Weather from './components/Weather'
 import Movies from './components/Movies'
 import Quiz from './components/Quiz'
 import Spotify from './components/Spotify'
-import Drums from './components/Drums'
-
+import Piano from './components/Piano'
+import Webcam from './components/Webcam'
+import YouTube from './components/YouTube'
+import Life from './components/Life'
+import Games from './components/Games'
+import Exercise from './components/Exercise'
+import Maps from './components/Maps'
 import { EventBus } from './event-bus.js';
+
 export default {
   name: 'App',
   components: {
@@ -56,7 +61,13 @@ export default {
     Spotify,
     Quiz,
     Movies,
-    Drums
+    Piano,
+    YouTube,
+    Webcam,
+    Life,
+    Games,
+    Exercise,
+    Maps
   },
   data(){
     return{
@@ -65,27 +76,63 @@ export default {
       widgets:[
         {
           id:1,
-          title:'Home'
+          title:'Home',
+          img:'buttons.png'
         },
         {
           id:2,
-          title:'Movies'
+          title:'Movies',
+          img:'movies.png'
         },
         {
           id:3,
-          title:'Quiz'
+          title:'Quiz',
+          img:'brain.png'
         },
         {
           id:4,
-          title:'Spotify'
+          title:'Spotify',
+          img:'spotify.png'
         },
         {
           id:5,
-          title:'Drums'
+          title:'Piano',
+          img:'piano.png'
         },
         {
           id:6,
-          title:'Weather'
+          title:'Weather',
+          img:'weather.png'
+        },
+        {
+          id:7,
+          title:'Life',
+          img:'life.png'
+        },
+        {
+          id:8,
+          title:'Games',
+          img:'games.png'
+        },
+        {
+          id:9,
+          title:'YouTube',
+          img:'youtube.png'
+        },
+        {
+          id:10,
+          title:'Webcam',
+          img:'mic.png'
+        },
+        {
+          id:11,
+          title:'Exercise',
+          img:'exercise.png'
+        },
+        {
+          id:12,
+          title:'maps',
+          img:'map.png'
         }
 
 
@@ -97,7 +144,7 @@ export default {
   methods:{
     init(){
       let sound = new Audio(mp3)
-      sound.volume = 0.1
+      sound.volume = 0.8
       sound.loop = true
       sound.play()
     },
@@ -124,6 +171,9 @@ export default {
 </script>
 
 <style>
+body{
+  overflow-y: hidden;
+}
 #app {
   font-family: 'Avenir', Helvetica, Arial, sans-serif;
   color: #eee;
@@ -131,31 +181,36 @@ export default {
   height: 620px;
 }
 #flexbox{
+  position: relative;
   display: flex;
+
+  margin-bottom: 22px;
+}
+#widgets{
+  position: absolute;
+  top:0;
+  left:970px;
+  clip-path: inset(120px 0 0 0);
+  flex: 2;
+  height: 740px;
+  min-width: 110px;
+  margin-top: -120px;
+  margin-right: 12px;
+  overflow:hidden;
+}
+#stage{
+  flex: 1;
+  min-width: 840px;
+  height: 620px;
   background: #0f3854;
   background: radial-gradient(ellipse at center,  #0a2e38  0%, #000000 70%);
   background-size: 100%;
   opacity: 0.7;
-  border-radius: 8px;
-  margin-bottom: 22px;
-}
-#widgets{
-  position: relative;
-  top:0;
-  flex: 2;
-  height: 620px;
-  min-width: 220px;
-  margin-top: 0;
-  overflow:hidden;
-  border:solid 2px #fff;
-}
-#stage{
-  flex: 1;
-  height: 620px;
-  min-width: 740px;
-  margin-right: 12px;
-  padding: 22px;
-  border-radius: 8px;
+  border-top-left-radius: 8px;
+  border-bottom-left-radius: 8px;
+  margin-right: 14px;
+  padding: 44px;
+  overflow: hidden;
 }
 * {
     box-sizing: border-box;
@@ -201,6 +256,7 @@ body {
   background-repeat: no-repeat;
 
 }
+
 .content::before {
   content: "";
   position: fixed;
@@ -240,6 +296,8 @@ body {
   border-bottom: solid 1px #666;
 }
 .headerApp{
+  font-family: 'Cuprum', sans-serif;
+  font-size: 1.1em;
   width:100%;
   max-width: 980px;
   margin:0 auto;
@@ -269,13 +327,15 @@ body {
 
 }
 .footerApp{
+  font-family: 'Cuprum', sans-serif;
+  letter-spacing: 1px;
   width:100%;
   max-width: 980px;
   height: 400px;
   margin:0 auto;
   padding:10px 0;
   color: #ccc;
-  font-size: 11px;
+  font-size: 0.8em;
   opacity: 0.7;
 }
 .speaker{
@@ -292,39 +352,45 @@ body {
 .fade-enter, .fade-leave {
   opacity: 0;
 }
-button:first-of-type{
+button{
+  font-size: 1em;
+  background-color: rgb(8, 87, 101);
+  border: 0;
+  color: #ddd;
+  width:110px;
+  height:22px;
   position: absolute;
-  top:92px;
-  left:106px;
+  transition:.3s;
+
+}
+button .up{
+  transform: scale(5, 1) rotate(90deg);
+  padding: 0 0 3px 2px;
+  margin: -10px 0 -20px 0;
+}
+button .down{
+  transform: scale(5, 1) rotate(-90deg);
+  padding: 0 0 3px 2px;
+    margin: -10px 0 -20px 0;
+}
+button:hover{
+  background-color: rgb(63, 1, 42);
+  cursor: pointer;
+}
+button:first-of-type{
+  top:119px;
+  left:0;
   z-index: 10;
+  border-top-right-radius: 8px;
 }
 button:last-of-type{
-  position: absolute;
-  bottom: -180px;
-  left:106px;
+  bottom: 0;
+  left:0;
   z-index: 10;
+  border-bottom-right-radius: 8px;
 }
-.widget{
-  height:220px;
-  padding:12px;
-  transition: transform 0.3s ease-in-out, opacity 0.1s;
-  cursor: pointer;
-  border:solid 8px #fff;
-  margin-top: 0;
-}
-.widget:first-of-type {
-  opacity: 0;
-  height:0;
+button:focus {
+  outline: none;
 }
 
-.widget:last-of-type {
-  opacity: 0;
-}
-.widgets-enter-active, .widgets-leave-active {
-  opacity:0;
-}
-.widgets-enter, .widgets-leave-to /* .list-leave-active below version 2.1.8 */ {
-  opacity:0;
-
-}
 </style>

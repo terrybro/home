@@ -2,7 +2,7 @@
   <div>
     <transition-group name="widgets" tag='div'>
       <div v-for='widget in widgets' v-bind:key='widget.id' class="widget">
-        <h1 v-on:click='emitGlobalClickEvent(widget.title)'>{{widget.title}}</h1>
+        <img :src='`./src/assets/images/${widget.img}`' v-on:click='emitGlobalClickEvent(widget.title)' height='66px'>
       </div>
     </transition-group>
   </div>
@@ -60,25 +60,39 @@ button{
   left:300px;
 }
 .widget{
-  height:100px;
-  transition: transform 0.3s ease-in-out, opacity 0.1s;
+  height:91px;
+  padding: 12px;
+  transition: transform 0.4s ease-in-out, opacity 2.6s;
   cursor: pointer;
-  border:solid 1px #666;
-  margin-top: 12px;
+  margin-top: 4px;
+  opacity: 0.9;
+  text-align: center;
+  padding: 6px 8px 10px;
+  border: solid 6px rgb(8, 87, 101);
+  border-radius: 4px
 }
 .widget:first-of-type {
   opacity: 0;
+  margin-bottom: 53px;
 }
 
 .widget:last-of-type {
   opacity: 0;
+}
+.widget:nth-of-type(8) {
+  opacity: 0;
+    margin-top: 53px;
 }
 .widgets-enter-active, .widgets-leave-active {
   opacity:0;
 }
 .widgets-enter, .widgets-leave-to /* .list-leave-active below version 2.1.8 */ {
   opacity:0;
-
 }
+.widget:hover{
+  border-color: rgb(63, 1, 42);
+  background-color: #000;
+}
+
 
 </style>

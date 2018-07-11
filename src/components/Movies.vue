@@ -37,7 +37,6 @@ export default {
       postersUrl:'https://api.themoviedb.org/3/movie/now_playing?api_key=2371af018e391d0b17022b718aa9054c&language=en-US&page=1&region=GB',
       films:false,
       posters:[]
-
     }
   },
   props:[],

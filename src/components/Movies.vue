@@ -31,12 +31,14 @@ export default {
   data () {
     return {
       cinemas:[],
+      pageNum:1,
       postcode:'',
       cinemasUrl:'https://api.cinelist.co.uk/search/cinemas/postcode/',
       filmsUrl:'https://api.cinelist.co.uk/get/times/cinema/',
-      postersUrl:'https://api.themoviedb.org/3/movie/now_playing?api_key=2371af018e391d0b17022b718aa9054c&language=en-US&page=1&region=GB',
+      posterUrl:'https://api.themoviedb.org/3/search/movie?api_key=2371af018e391d0b17022b718aa9054c&query=',
       films:false,
-      posters:[]
+      posters:[],
+      totalPages:0
     }
   },
   props:[],
@@ -57,12 +59,20 @@ export default {
         console.log(err)
     }
   },
-    async getPosters() {
+    async getPosters(pageNum) {
       try{
         const response = await fetch(this.postersUrl)
         return response.json()
       }catch(err){
         console.log(err)
+    }
+  },
+  async findFilm(name) {
+    try{
+      const response = await fetch(`${this.posterUrl + name}&page=1`)
+      return response.json()
+    }catch(err){
+      console.log(err)
     }
   },
     start(){
@@ -108,23 +118,41 @@ export default {
       let film = this.posters.find(poster => poster.title === name)
       if (typeof film !== 'undefined'){
             return film.img
+      }else{
+        this.findFilm(name)
+        .then(response => {
+          this.posters.push({title:name, img:`https://image.tmdb.org/t/p/w185/${response.results[0].poster_path}`})
+        })
       }
     }
   },
   computed:{
     computedHeight:function(){
       return this.divHeight
+    },
+    postersUrl(){
+      return 'https://api.themoviedb.org/3/movie/now_playing?api_key=2371af018e391d0b17022b718aa9054c&language=en-US&page='+this.pageNum+'&region=GB'
     }
-
   },
   mounted(){
     this.getPosters()
     .then(response => {
+      this.totalPages = response.total_pages
       response.results.forEach((film => {
         this.posters.push({title:film.title, img:`https://image.tmdb.org/t/p/w185/${film.poster_path}`})
       }))
     })
-  }
+    .then([...Array(3)].forEach(() => {
+      this.pageNum ++
+      this.getPosters()
+      .then(response => {
+        response.results.forEach((film => {
+          this.posters.push({title:film.title, img:`https://image.tmdb.org/t/p/w185/${film.poster_path}`})
+        }))
+      })
+    })
+  )
+}
 }
 
 </script>
